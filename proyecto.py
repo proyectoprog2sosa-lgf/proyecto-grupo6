@@ -46,7 +46,7 @@ def manejar_archivo() -> dict:
     return dicc
 
 
-def mayor(lista: list[tuple]) -> tuple:
+def mayor(lista: list[tuple[int,int]]) -> tuple:
     '''
     Dada una lista de tuplas  de numeros, devuelve la tupla con el mayor en el segundo elemento de ellos.\n
     mayor([1,2,3]) = 3  
@@ -57,41 +57,38 @@ def mayor(lista: list[tuple]) -> tuple:
         if t[1] > mayor[1]:
             mayor = t
     return mayor
-def test_mayor():
-    assert mayor([1,2,3]) == 3
-    assert mayor([]) == 0
 
-def disponibilidades_anuales(listings: dict[int,tuple]) -> list[tuple]:
+def reseñas_anuales(listings: dict[int,tuple]) -> list[tuple]:
     """
-    disponibilidades_anuales(listings: dict[int, tuple]) -> list[tuple]
+    reseñas_anuales(listings: dict[int, tuple]) -> list[tuple]
     Devuelve una lista de tuplas (id, disponibilidad anual).
     """
-    lista_disponibilidad = []
+    lista_reseñas = []
     for ids, datos in listings.items():
-        lista_disponibilidad += [(ids,int(datos[15]))]
-    return lista_disponibilidad
+        lista_reseñas += [(ids,int(datos[11]))]
+    return lista_reseñas
 
 def mayores10(listings) -> list[tuple]:
     """
     mayores10(listings: dict[int, tuple]) -> list[tuple]
     Devuelve los 10 alojamientos con mayor disponibilidad anual.
     """
-    lista_disponibilidad = disponibilidades_anuales(listings)
+    lista_reseñas = reseñas_anuales(listings)
     lista_mayores = []
     for i in range(10):
-        t_mayor = mayor(lista_disponibilidad)
+        t_mayor = mayor(lista_reseñas)
         lista_mayores.append(t_mayor)
-        lista_disponibilidad.remove(t_mayor)
+        lista_reseñas.remove(t_mayor)
     return lista_mayores
 
-def alojamientos_mayor_disp(listings) -> list:
+def alojamientos_mayor_reseñas(listings) -> list:
     """
     alojamientos_mayor_disp(listings: dict[int, tuple]) -> list
     Devuelve una lista con información resumida de los 10 alojamientos con mayor disponibilidad.
     """
     lista_alojamientos = []
-    for ids, disponibilidad in mayores10(listings):
-        lista_alojamientos.append([listings[ids][0],listings[ids][3],listings[ids][5],listings[ids][8],listings[ids][15]])
+    for ids, reseñas in mayores10(listings):
+        lista_alojamientos.append([listings[ids][0],listings[ids][3],listings[ids][5],listings[ids][8],listings[ids][11]])
     return lista_alojamientos
 
 def mostrar_tabla(listings):
@@ -99,10 +96,10 @@ def mostrar_tabla(listings):
     mostrar_tabla(listings: dict[int, tuple]) -> None
     Muestra la tabla en Streamlit con los resultados.
     """
-    st.table(alojamientos_mayor_disp(listings),width= 'content')
+    st.table(alojamientos_mayor_reseñas(listings),width= 'content')
 
 def main():
-    st.title('¿Cuales son los alojamientos con mayor disponibilidad anual?')
+    st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
     mostrar_tabla(manejar_archivo())
 
 main()
