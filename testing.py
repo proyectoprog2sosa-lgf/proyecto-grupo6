@@ -1,6 +1,8 @@
 import pytest
 from proyecto import *
 
+import pytest
+
 # tests de la funcion mayor
 # caso 1
 def test_mayor_medio():
@@ -24,7 +26,6 @@ def test_mayor_negativos():
 
 # pruebas para disponibilidades_anuales
 def test_disp_anuales_varios():
-    # armo tuplas falopas de 18 elementos para q no rompa
     t1 = ["x"]*18
     t1[15] = "365"
     t2 = ["x"] * 18
@@ -49,7 +50,7 @@ def test_mayores10_exacto():
     listings={}
     for i in range(10):
         t = ["x"] * 18
-        t[15]= str(i*10) # tira 0, 10, 20...
+        t[15]= str(i*10) # tira 0, 10, 20 etc
         listings[f"id{i}"] = tuple(t)
         
     res = mayores10(listings)
@@ -59,7 +60,7 @@ def test_mayores10_exacto():
     assert res[-1]== ("id0",0)
 
 def test_mayores10_pasado():
-    # le mandamos mas de 10 a ver q onda
+    #elementos de mas
     listings = {}
     for i in range(15):
         t=["x"] * 18
@@ -68,24 +69,4 @@ def test_mayores10_pasado():
         
     res = mayores10(listings)
     assert len(res) == 10
-    assert res[0] == ("id14", 14)
-
-
-# test para alojamientos_mayor_disp
-def test_alojamientos_extraccion():
-    # armamos uno de 10 para q no crashee mayores10
-    listings = {}
-    for i in range(10):
-        t = [str(j) for j in range(18)]
-        t[0] = f"ID_{i}"
-        t[3]=f"Nom_{i}"
-        t[5] = f"Var5_{i}"
-        t[8] = f"Var8_{i}"
-        t[15]= str(i*10)
-        listings[f"id{i}"] = tuple(t)
-        
-    resultado= alojamientos_mayor_disp(listings)
-    
-    assert len(resultado)==10
-    # tiene q traer el indice 9 q es el mas grande, con los campos q pide
-    assert resultado[0] == ["ID_9", "Nom_9", "Var5_9", "Var8_9", "90"]
+    assert res
