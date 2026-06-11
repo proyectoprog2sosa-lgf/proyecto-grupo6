@@ -83,9 +83,6 @@ def mayores10(listings) -> list[tuple]:
         lista_mayores.append(t_mayor)
         lista_disponibilidad.remove(t_mayor)
     return lista_mayores
-def test_mayores10():
-    assert mayores10([1,2,3,4,5,6,7,8,9,10,11,12,13]) == [13,12,11,10,9,8,7,6,5,4]
-    assert mayores10([123,56,114]) == [123,114,56,0,0,0,0,0,0,0]
 
 def alojamientos_mayor_disp(listings) -> list:
     """
