@@ -1,3 +1,4 @@
+
 """
 Un Airbnb es:
 {id: Datos}
@@ -30,6 +31,11 @@ import streamlit as st
 import csv
 
 def manejar_archivo() -> dict:
+    """
+    manejar_archivo() -> dict[int, tuple]
+    Lee el archivo CSV y construye un diccionario donde la clave es el id del alojamiento
+    y el valor es una tupla con toda la información del Airbnb.
+    """
     dicc = {}
     with open('listings-Buenos_Aires-12K.csv') as listings:
         lector = csv.reader(listings)
@@ -51,14 +57,25 @@ def mayor(lista: list[tuple]) -> tuple:
         if t[1] > mayor[1]:
             mayor = t
     return mayor
+def test_mayor():
+    assert mayor([1,2,3]) == 3
+    assert mayor([]) == 0
 
 def disponibilidades_anuales(listings: dict[int,tuple]) -> list[tuple]:
+    """
+    disponibilidades_anuales(listings: dict[int, tuple]) -> list[tuple]
+    Devuelve una lista de tuplas (id, disponibilidad anual).
+    """
     lista_disponibilidad = []
     for ids, datos in listings.items():
         lista_disponibilidad += [(ids,int(datos[15]))]
     return lista_disponibilidad
 
 def mayores10(listings) -> list[tuple]:
+    """
+    mayores10(listings: dict[int, tuple]) -> list[tuple]
+    Devuelve los 10 alojamientos con mayor disponibilidad anual.
+    """
     lista_disponibilidad = disponibilidades_anuales(listings)
     lista_mayores = []
     for i in range(10):
@@ -71,12 +88,20 @@ def test_mayores10():
     assert mayores10([123,56,114]) == [123,114,56,0,0,0,0,0,0,0]
 
 def alojamientos_mayor_disp(listings) -> list:
+    """
+    alojamientos_mayor_disp(listings: dict[int, tuple]) -> list
+    Devuelve una lista con información resumida de los 10 alojamientos con mayor disponibilidad.
+    """
     lista_alojamientos = []
     for ids, disponibilidad in mayores10(listings):
         lista_alojamientos.append([listings[ids][0],listings[ids][3],listings[ids][5],listings[ids][8],listings[ids][15]])
     return lista_alojamientos
 
 def mostrar_tabla(listings):
+    """
+    mostrar_tabla(listings: dict[int, tuple]) -> None
+    Muestra la tabla en Streamlit con los resultados.
+    """
     st.table(alojamientos_mayor_disp(listings),width= 'content')
 
 def main():
@@ -84,4 +109,3 @@ def main():
     mostrar_tabla(manejar_archivo())
 
 main()
-
