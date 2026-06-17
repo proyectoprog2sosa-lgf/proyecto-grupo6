@@ -24,10 +24,6 @@ number_of_reviews: numero de reseñas
 licencia: numero de licencia del alquiler (o string indicando que licencia tiene el alquiler)
 """
 import streamlit as st
-
-# Cuales son los 10 alojamientos con mayor disponibilidad anual?
-
-
 import csv
 
 def manejar_archivo() -> dict:
@@ -37,58 +33,89 @@ def manejar_archivo() -> dict:
     y el valor es una tupla con toda la información del Airbnb.
     """
     dicc = {}
-    with open('listings-Buenos_Aires-12K.csv') as listings:
+    with open('listings-Buenos_Aires-12K.csv', encoding='utf-8') as listings:
         lector = csv.reader(listings)
         next(lector)
         for linea in lector:
-            datos = linea
-            dicc[datos[0]] = (datos[1],datos[2],datos[3],datos[4],datos[5],datos[6],datos[7],datos[8],datos[9],datos[10],datos[11],datos[12],datos[13],datos[14],datos[15],datos[16],datos[17],datos[18])
+            if linea:
+                dicc[linea[0]] = tuple(linea)
     return dicc
 
+def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
+    """
+    mayor(list, int, int) --> list
+    lista_de_mayores: es una lista con los numeros mas grandes recolectados
+    nuevo: es el nuevo numero a verificar
+    indice_menor: almacena el numero mas pequeño
+    retorna una lista con o sin el numero nuevo dependiendo si entra o no
+    """
+    id_viejo = lista_de_mayores[indice_menor]
+    
+    if id_viejo == 0:
+        lista_de_mayores[indice_menor] = nuevo
+        return lista_de_mayores
+        
+    if dataset[nuevo][11] != '':
+        val_nuevo = float(dataset[nuevo][11])
+    else:
+        val_nuevo = 0.0
+        
+    if dataset[id_viejo][11] != '':
+        val_viejo = float(dataset[id_viejo][11])
+    else:
+        val_viejo = 0.0
+    
+    if val_viejo < val_nuevo:
+        lista_de_mayores[indice_menor] = nuevo
+        
+    return lista_de_mayores
 
-def mayor(lista: list[tuple[int,int]]) -> tuple:
-    '''
-    Dada una lista de tuplas  de numeros, devuelve la tupla con el mayor en el segundo elemento de ellos.\n
-    mayor([1,2,3]) = 3  
-    mayor([]) = 0
-    '''
-    mayor = lista[0]
-    for t in lista:
-        if t[1] > mayor[1]:
-            mayor = t
-    return mayor
+def menor(lista, dataset):
+    """
+    menor(list, dicc) -> int
+    lista: representa una lista con 10 numeros enteros
+    retorna el indice del numero mas bajo dentro de la lista
+    """
+    if 0 in lista:
+        return lista.index(0)
+        
+    menor_indice = 0
+    for i in range(len(lista)):
+        if dataset[lista[i]][11] != '':
+            val1 = float(dataset[lista[i]][11])
+        else:
+            val1 = 0.0
+            
+        if dataset[lista[menor_indice]][11] != '':
+            val2 = float(dataset[lista[menor_indice]][11])
+        else:
+            val2 = 0.0
+        
+        if val1 < val2:
+            menor_indice = i
+            
+    return menor_indice
 
-def reseñas_anuales(listings: dict[int,tuple]) -> list[tuple]:
+def mayores10(listings) -> list:
     """
-    reseñas_anuales(listings: dict[int, tuple]) -> list[tuple]
-    Devuelve una lista de tuplas (id, disponibilidad anual).
     """
-    lista_reseñas = []
-    for ids, datos in listings.items():
-        lista_reseñas += [(ids,int(datos[11]))]
-    return lista_reseñas
-
-def mayores10(listings) -> list[tuple]:
-    """
-    mayores10(listings: dict[int, tuple]) -> list[tuple]
-    Devuelve los 10 alojamientos con mayor disponibilidad anual.
-    """
-    lista_reseñas = reseñas_anuales(listings)
-    lista_mayores = []
-    for i in range(10):
-        t_mayor = mayor(lista_reseñas)
-        lista_mayores.append(t_mayor)
-        lista_reseñas.remove(t_mayor)
+    lista_mayores = [0,0,0,0,0,0,0,0,0,0]
+    for id in listings:
+        lista_mayores = mayor(lista_mayores, id, menor(lista_mayores, listings), listings)
+        
     return lista_mayores
 
 def alojamientos_mayor_reseñas(listings) -> list:
     """
-    alojamientos_mayor_disp(listings: dict[int, tuple]) -> list
-    Devuelve una lista con información resumida de los 10 alojamientos con mayor disponibilidad.
+    Devuelve una lista con información resumida de los 10 alojamientos
     """
-    lista_alojamientos = []
-    for ids, reseñas in mayores10(listings):
-        lista_alojamientos.append([listings[ids][0],listings[ids][3],listings[ids][5],listings[ids][8],listings[ids][11]])
+    lista_alojamientos = [["Nombre", "Anfitrion", "Barrio", "Reseñas"]]
+    top10 = mayores10(listings)
+    
+    for ids in top10:
+        if ids != 0:
+            lista_alojamientos.append([listings[ids][1], listings[ids][3], listings[ids][4], listings[ids][11]])
+            
     return lista_alojamientos
 
 def mostrar_tabla(listings):
@@ -96,7 +123,7 @@ def mostrar_tabla(listings):
     mostrar_tabla(listings: dict[int, tuple]) -> None
     Muestra la tabla en Streamlit con los resultados.
     """
-    st.table(alojamientos_mayor_reseñas(listings),width= 'content')
+    st.table(alojamientos_mayor_reseñas(listings))
 
 def main():
     st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
