@@ -125,8 +125,30 @@ def mostrar_tabla(listings):
     """
     st.table(alojamientos_mayor_reseñas(listings))
 
+# Cuales alojamientos se pueden reservar por un minimo de X noches?
+
+def alojamientos_minimo_noches(minimo: int,listings) -> list:
+    lista_coordenadas = []
+    for ids,datos in listings.items():
+        if datos[10] != '' and float(datos[10]) <= minimo:
+            lista_coordenadas += [(float(datos[6]),float(datos[7]))]
+    return lista_coordenadas
+
+
+import pandas as pd
+def mostrar_mapa(minimo: int,listings):
+    df = pd.DataFrame(alojamientos_minimo_noches(minimo,listings),columns=["latitud", "longitud"])
+    st.map(df,latitude= 'latitud',longitude= 'longitud')
+
 def main():
-    st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
-    mostrar_tabla(manejar_archivo())
+    listings = manejar_archivo()
+
+    tab1, tab2 = st.tabs(['Pregunta 1','Pregunta 2'])
+    with tab1:
+        st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
+        mostrar_tabla(listings)
+    with tab2:
+        minimo = st.select_slider("Elija un minimo de dias para reservar el alojamiento:",options= [x for x in range(365)])
+        mostrar_mapa(minimo, listings)
 
 main()
