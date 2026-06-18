@@ -33,13 +33,14 @@ def manejar_archivo() -> dict:
     y el valor es una tupla con toda la información del Airbnb.
     """
     dicc = {}
-    with open('listings-Buenos_Aires-12K.csv', encoding='utf-8') as listings:
+    with open('listings-Buenos_Aires-12K.csv') as listings:
         lector = csv.reader(listings)
         next(lector)
         for linea in lector:
-            if linea:
-                dicc[linea[0]] = tuple(linea)
+            datos = linea
+            dicc[datos[0]] = (datos[1],datos[2],datos[3],datos[4],datos[5],datos[6],datos[7],datos[8],datos[9],datos[10],datos[11],datos[12],datos[13],datos[14],datos[15],datos[16],datos[17],datos[18])
     return dicc
+
 
 def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
     """
@@ -148,7 +149,7 @@ def main():
         st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
         mostrar_tabla(listings)
     with tab2:
-        minimo = st.select_slider("Elija un minimo de dias para reservar el alojamiento:",options= [x for x in range(365)])
+        minimo = st.select_slider("Elija un minimo de dias para reservar el alojamiento:",options= [x for x in range(1,365)])
         mostrar_mapa(minimo, listings)
 
 main()
