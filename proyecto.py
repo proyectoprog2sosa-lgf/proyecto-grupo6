@@ -1,11 +1,10 @@
-
 """
 Un Airbnb es:
 {id: Datos}
 {int: tuple}
 id: es el numero que identifica al alquiler
-Datos: es una tupla que contiene la informacion donde:
-(nombre, host_id, host_profile_id, host_name, neighbourhood, latitud, longitud, room_type, minimun_nights, number_of_reviews, last_review, reviews_per_month, calculated_hots_listing_count, availability_356, number_of_reviews, license)
+Datos: es una tupla que contiene la informacion  del airbnb donde:
+(nombre, host_id, host_profile_id, host_name, neighbourhood_group, neighbourhood, latitude, longitude, room_type, price, minimun_nights, number_of_reviews, last_review, reviews_per_month, calculated_hots_listing_count, availability_356, number_of_reviews, license)
 (string, int, int, string, string, float, float, string, int, int, string, float, int, int, int, string)
 nombre: nombre del alojamiento
 host_id: identificador por afiliado
@@ -115,7 +114,7 @@ def alojamientos_mayor_reseñas(listings) -> list:
     
     for ids in top10:
         if ids != 0:
-            lista_alojamientos.append([listings[ids][1], listings[ids][3], listings[ids][4], listings[ids][11]])
+            lista_alojamientos.append([listings[ids][0], listings[ids][3], listings[ids][5], listings[ids][11]])
             
     return lista_alojamientos
 
@@ -129,17 +128,27 @@ def mostrar_tabla(listings):
 # Cuales alojamientos se pueden reservar por un minimo de X noches?
 
 def alojamientos_minimo_noches(minimo: int,listings) -> list:
+    '''
+    Dado un numero minimo devuelve la lista de las coordenadas de los alojamientos que pueden
+    reservar por el minimo dado.
+    '''
     lista_coordenadas = []
     for ids,datos in listings.items():
         if datos[10] != '' and float(datos[10]) <= minimo:
             lista_coordenadas += [(float(datos[6]),float(datos[7]))]
     return lista_coordenadas
 
-
-import pandas as pd
 def mostrar_mapa(minimo: int,listings):
-    df = pd.DataFrame(alojamientos_minimo_noches(minimo,listings),columns=["latitud", "longitud"])
-    st.map(df,latitude= 'latitud',longitude= 'longitud')
+    dicc = {}
+    lista_latitudes = []
+    lista_longitudes = []
+    for tupla in alojamientos_minimo_noches(minimo,listings):
+        latitud, longitud = tupla
+        lista_latitudes.append(latitud)
+        lista_longitudes.append(longitud)
+    dicc['Latitud'] = lista_latitudes
+    dicc['Longitud'] = lista_longitudes
+    st.map(dicc,latitude= 'Latitud',longitude= 'Longitud')
 
 def main():
     listings = manejar_archivo()
