@@ -22,10 +22,11 @@ availability_356: disponibilidad durante el año
 number_of_reviews: numero de reseñas
 licencia: numero de licencia del alquiler (o string indicando que licencia tiene el alquiler)
 """
+
 import streamlit as st
 import csv
 
-def manejar_archivo() -> dict:
+def manejar_archivo():
     """
     manejar_archivo() -> dict[int, tuple]
     Lee el archivo CSV y construye un diccionario donde la clave es el id del alojamiento
@@ -43,11 +44,11 @@ def manejar_archivo() -> dict:
 
 def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
     """
-    mayor(list, int, int) --> list
+    mayor: list(int) int int Airbnb --> list(int)
     lista_de_mayores: es una lista con los numeros mas grandes recolectados
     nuevo: es el nuevo numero a verificar
     indice_menor: almacena el numero mas pequeño
-    retorna una lista con o sin el numero nuevo dependiendo si entra o no
+    Retorna una lista con o sin el numero nuevo dependiendo si entra o no
     """
     id_viejo = lista_de_mayores[indice_menor]
     
@@ -72,7 +73,7 @@ def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
 
 def menor(lista, dataset):
     """
-    menor(list, dicc) -> int
+    menor: List[Int] Airbnb -> Int
     lista: representa una lista con 10 numeros enteros
     retorna el indice del numero mas bajo dentro de la lista
     """
@@ -96,8 +97,9 @@ def menor(lista, dataset):
             
     return menor_indice
 
-def mayores10(listings) -> list:
+def mayores10(listings):
     """
+    mayores10: Airbnb -> list
     """
     lista_mayores = [0,0,0,0,0,0,0,0,0,0]
     for id in listings:
@@ -127,8 +129,9 @@ def mostrar_tabla(listings):
 
 # Cuales alojamientos se pueden reservar por un minimo de X noches?
 
-def alojamientos_minimo_noches(minimo: int,listings) -> list:
+def alojamientos_minimo_noches(minimo: int,listings) -> list[tuple[float,float]]:
     '''
+    alojamientos_minimo_nnoches: Int Airbnb -> List[(float,float)]
     Dado un numero minimo devuelve la lista de las coordenadas de los alojamientos que pueden
     reservar por el minimo dado.
     '''
@@ -139,6 +142,10 @@ def alojamientos_minimo_noches(minimo: int,listings) -> list:
     return lista_coordenadas
 
 def mostrar_mapa(minimo: int,listings):
+    '''
+    motrar_mapa: Int Airbnb -> None
+    Muestra el mapa en streamlit con los resultados.
+    '''
     dicc = {}
     lista_latitudes = []
     lista_longitudes = []
