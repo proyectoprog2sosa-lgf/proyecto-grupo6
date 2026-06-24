@@ -24,6 +24,7 @@ licencia: numero de licencia del alquiler (o string indicando que licencia tiene
 """
 
 import streamlit as st
+import matplotlib.pyplot as plt
 import csv
 
 def manejar_archivo():
@@ -157,15 +158,38 @@ def mostrar_mapa(minimo: int,listings):
     dicc['Longitud'] = lista_longitudes
     st.map(dicc,latitude= 'Latitud',longitude= 'Longitud')
 
+# Cuantos alojamientos hay por barrio?
+
+def contar_aloj_barrio(listings):
+    dicc = {}
+    for ids,datos in listings.items():
+        if datos[5] not in dicc:
+            dicc[datos[5]] = 1
+        else:
+            dicc[datos[5]] += 1 
+    return dicc
+
+def mostrar_grafico(listings):
+    aloj_por_barrio = contar_aloj_barrio(listings)
+    plt.barh(aloj_por_barrio.keys(),aloj_por_barrio.values(),color='blue')
+    plt.xlabel('Cantidad de Alojamientos')
+    plt.ylabel('Barrios')
+    plt.tick_params(axis= 'y', labelsize= 7)
+    plt.tight_layout()
+
 def main():
     listings = manejar_archivo()
 
-    tab1, tab2 = st.tabs(['Pregunta 1','Pregunta 2'])
+    tab1, tab2, tab3 = st.tabs(['Pregunta 4','Pregunta 3','Pregunta 5'])
     with tab1:
         st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
         mostrar_tabla(listings)
     with tab2:
         minimo = st.select_slider("Elija un minimo de dias para reservar el alojamiento:",options= [x for x in range(1,365)])
         mostrar_mapa(minimo, listings)
+    with tab3:
+        st.title('¿Cuantos alojamientos hay por barrio?')
+        mostrar_grafico(listings)
+        st.pyplot(plt)
 
 main()
