@@ -76,7 +76,7 @@ def menor(lista, dataset, indice_columna=11):
     """
     menor: List[Int] Airbnb Int -> Int
     lista: representa una lista con 10 numeros enteros
-    retorna el indice del numero mas bajo dentro de la lista
+    retorna el indice del id relacionado al elemento con la menor cantidad de reseñas
     """
     if 0 in lista:
         return lista.index(0)

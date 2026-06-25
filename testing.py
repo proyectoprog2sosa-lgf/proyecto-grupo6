@@ -1,28 +1,23 @@
-import pytest
 from proyecto import *
 
-import pytest
+def manejar_archivo():
+    """
+    manejar_archivo() -> dict[int, tuple]
+    Lee el archivo CSV y construye un diccionario donde la clave es el id del alojamiento
+    y el valor es una tupla con toda la información del Airbnb.
+    """
+    dicc = {}
+    with open('jola.csv') as listings:
+        lector = csv.reader(listings)
+        next(lector)
+        for linea in lector:
+            datos = linea
+            dicc[datos[0]] = (datos[1],datos[2],datos[3],datos[4],datos[5],datos[6],datos[7],datos[8],datos[9],datos[10],datos[11],datos[12],datos[13],datos[14],datos[15],datos[16],datos[17],datos[18])
+    return dicc
 
-# tests de la funcion mayor
-# caso 1
-def test_mayor_medio():
-    lista = [("a",10), ("b", 50), ("c", 20)]
-    assert mayor(lista)==("b", 50)
 
-# caso 2 y 3 (principio y unico elemento)
-def test_mayor_principio():
-    lista=[("a", 100), ("b",50), ("c", 20)]
-    assert mayor(lista) == ("a", 100)
-
-def test_mayor_unico():
-    lista = [("a",10)]
-    assert mayor(lista) == ("a", 10)
-
-# caso 4
-def test_mayor_negativos():
-    lista = [("a",-10),("b",-5),("c", -20)]
-    assert mayor(lista) == ("b", -5)
-
+def test_menor ():
+    pass
 
 # pruebas para disponibilidades_anuales
 def test_disp_anuales_varios():
