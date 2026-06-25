@@ -70,3 +70,13 @@ def test_mayores10_pasado():
     res = mayores10(listings)
     assert len(res) == 10
     assert res
+#testing buscar alojamiento por nombre
+def test_buscar_alojamiento():
+    listings = {
+        1: ("Casa Azul", 0, 0, "Juan", "", "Palermo", 0, 0, "", 0, 0, 5),
+        2: ("Depto Azul", 0, 0, "Ana", "", "Recoleta", 0, 0, "", 0, 0, 10)
+    }
+
+    resultado = buscar_alojamiento("Azul", listings)
+
+    assert len(resultado) == 3
