@@ -65,7 +65,7 @@ def test_mayores10_pasado():
     for i in range(15):
         t=["x"] * 18
         t[15] = str(i)
-        listings[f"id{i}"] = tuple(t)
+        listings[f"id {i}"] = tuple(t)
         
     res = mayores10(listings)
     assert len(res) == 10
@@ -77,6 +77,6 @@ def test_buscar_alojamiento():
         2: ("Depto Azul", 0, 0, "Ana", "", "Recoleta", 0, 0, "", 0, 0, 10)
     }
 
-    resultado = buscar_alojamiento("Azul", listings)
+    resultado = buscar_alojamiento("Casa Azul", listings)
 
-    assert len(resultado) == 3
+    assert resultado == [["Nombre", "Anfitrión", "Barrio", "Reseñas"],["Casa Azul","Juan","Palermo",5]]

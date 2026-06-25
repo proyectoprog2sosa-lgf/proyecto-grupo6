@@ -189,6 +189,10 @@ def mostrar_grafico(listings):
 # Buscar alojamientos por nombre.
 
 def buscar_alojamiento(nombre, listings):
+    '''
+    buscar_alojamientos: Str Airbnb -> List(List(Str))  
+    Dado el nombre del alojamiento y el dataset de airbnbs devuelve la informacion resumida del alojamiento.
+    '''
     resultado = [["Nombre", "Anfitrión", "Barrio", "Reseñas"]]
     for ids, datos in listings.items():
         if nombre.lower() in datos[0].lower():
@@ -205,8 +209,6 @@ def mostrar_busqueda(listings):
             st.write("No se encontraron alojamientos.")
 
 # Cuales fueron los aljomaientos con mas reservas en el ultimo año?
-
-
 
 def alojamientos_mas_reservas(listings) -> list:
     """
