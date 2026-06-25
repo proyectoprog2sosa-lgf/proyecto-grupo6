@@ -160,22 +160,33 @@ def mostrar_mapa(minimo: int,listings):
 
 # Cuantos alojamientos hay por barrio?
 
-def contar_aloj_barrio(listings):
+def contar_aloj_barrio(listings) -> dict[str,int]:
+    '''
+    contar_aloj_barrio: Airbnb -> dict[str,int]
+    Dado el dataset leido, devuelve un diccionario donde las claves son los barrios y los valores son la cantidad de alojamientos que se encuentran en ese barrio.
+    '''
     dicc = {}
     for ids,datos in listings.items():
-        if datos[5] not in dicc:
-            dicc[datos[5]] = 1
+        barrio = datos[5]
+        if barrio not in dicc:
+            dicc[barrio] = 1
         else:
-            dicc[datos[5]] += 1 
+            dicc[barrio] += 1 
     return dicc
 
 def mostrar_grafico(listings):
+    '''
+    mostrar_grafico: Airbnb -> None     
+    Dado el dataset con los airbnb crea el grafico de barras horizontal con la cantidad de alojamientos por barrio.
+    '''
     aloj_por_barrio = contar_aloj_barrio(listings)
     plt.barh(aloj_por_barrio.keys(),aloj_por_barrio.values(),color='blue')
     plt.xlabel('Cantidad de Alojamientos')
     plt.ylabel('Barrios')
     plt.tick_params(axis= 'y', labelsize= 7)
     plt.tight_layout()
+
+# Buscar alojamientos por nombre.
 
 def buscar_alojamiento(nombre, listings):
     resultado = [["Nombre", "Anfitrión", "Barrio", "Reseñas"]]
@@ -192,11 +203,15 @@ def mostrar_busqueda(listings):
             st.table(resultado)
         else:
             st.write("No se encontraron alojamientos.")
-# cuales fueron los aljomaientos con mas reservas en el ultimo año?
+
+# Cuales fueron los aljomaientos con mas reservas en el ultimo año?
+
+
+
 def alojamientos_mas_reservas(listings) -> list:
     """
     alojamientos_mas_reservas: Airbnb -> list
-    Devuelve
+    Devuelve una lista cbon los ids de los alojamientos que han tenido mas reservas.
     """
     lista_mayores = [0,0,0,0,0,0,0,0,0,0]
     
@@ -222,7 +237,7 @@ def mostrar_tabla_reservas(listings):
 def main():
     listings = manejar_archivo()
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(['Pregunta 4','Pregunta 3','Pregunta 5', 'Pregunta 6', 'Reservas Último Año'])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(['Mas reservas','Minimo de dias para reservar','Alojamientos por barrio', 'Buscar alojamientos', 'Reservas Último Año'])
     with tab1:
         st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
         mostrar_tabla(listings)
