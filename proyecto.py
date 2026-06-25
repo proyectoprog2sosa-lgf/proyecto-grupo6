@@ -43,9 +43,9 @@ def manejar_archivo():
     return dicc
 
 
-def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
+def mayor(lista_de_mayores, nuevo, indice_menor, dataset, indice_columna=11):
     """
-    mayor: list(int) int int Airbnb --> list(int)
+    mayor: list(int) int int Airbnb int --> list(int)
     lista_de_mayores: es una lista con los numeros mas grandes recolectados
     nuevo: es el nuevo numero a verificar
     indice_menor: almacena el numero mas pequeño
@@ -57,13 +57,13 @@ def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
         lista_de_mayores[indice_menor] = nuevo
         return lista_de_mayores
         
-    if dataset[nuevo][11] != '':
-        val_nuevo = float(dataset[nuevo][11])
+    if dataset[nuevo][indice_columna] != '':
+        val_nuevo = float(dataset[nuevo][indice_columna])
     else:
         val_nuevo = 0.0
         
-    if dataset[id_viejo][11] != '':
-        val_viejo = float(dataset[id_viejo][11])
+    if dataset[id_viejo][indice_columna] != '':
+        val_viejo = float(dataset[id_viejo][indice_columna])
     else:
         val_viejo = 0.0
     
@@ -72,9 +72,9 @@ def mayor(lista_de_mayores, nuevo, indice_menor, dataset):
         
     return lista_de_mayores
 
-def menor(lista, dataset):
+def menor(lista, dataset, indice_columna=11):
     """
-    menor: List[Int] Airbnb -> Int
+    menor: List[Int] Airbnb Int -> Int
     lista: representa una lista con 10 numeros enteros
     retorna el indice del numero mas bajo dentro de la lista
     """
@@ -83,13 +83,13 @@ def menor(lista, dataset):
         
     menor_indice = 0
     for i in range(len(lista)):
-        if dataset[lista[i]][11] != '':
-            val1 = float(dataset[lista[i]][11])
+        if dataset[lista[i]][indice_columna] != '':
+            val1 = float(dataset[lista[i]][indice_columna])
         else:
             val1 = 0.0
             
-        if dataset[lista[menor_indice]][11] != '':
-            val2 = float(dataset[lista[menor_indice]][11])
+        if dataset[lista[menor_indice]][indice_columna] != '':
+            val2 = float(dataset[lista[menor_indice]][indice_columna])
         else:
             val2 = 0.0
         
@@ -192,11 +192,37 @@ def mostrar_busqueda(listings):
             st.table(resultado)
         else:
             st.write("No se encontraron alojamientos.")
+# cuales fueron los aljomaientos con mas reservas en el ultimo año?
+def alojamientos_mas_reservas(listings) -> list:
+    """
+    alojamientos_mas_reservas: Airbnb -> list
+    Devuelve
+    """
+    lista_mayores = [0,0,0,0,0,0,0,0,0,0]
+    
+    for id in listings:
+        indice_del_menor = menor(lista_mayores, listings, indice_columna=16)
+        lista_mayores = mayor(lista_mayores, id, indice_del_menor, listings, indice_columna=16)
+        
+    lista_alojamientos = [["Nombre", "Anfitrion", "Barrio", "Reservas (Ultimo Anio)"]]
+    
+    for ids in lista_mayores:
+        if ids != 0:
+            lista_alojamientos.append([listings[ids][0], listings[ids][3], listings[ids][5], listings[ids][16]])
+            
+    return lista_alojamientos
+
+def mostrar_tabla_reservas(listings):
+    """
+    mostrar_tabla_reservas(listings: dict[int, tuple]) -> None
+    Muestra la tabla en streamlit con los resultados
+    """
+    st.table(alojamientos_mas_reservas(listings))
 
 def main():
     listings = manejar_archivo()
 
-    tab1, tab2, tab3, tab4 = st.tabs(['Pregunta 4','Pregunta 3','Pregunta 5', 'Pregunta 6'])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(['Pregunta 4','Pregunta 3','Pregunta 5', 'Pregunta 6', 'Reservas Último Año'])
     with tab1:
         st.title('¿Cuales son los alojamientos con mayor cantidad de reseñas?')
         mostrar_tabla(listings)
@@ -210,5 +236,8 @@ def main():
     with tab4:
         st.title('Buscar alojamiento por nombre')
         mostrar_busqueda(listings)
+    with tab5:
+        st.title('¿Cuales son los alojamientos con más reservas en el último año?')
+        mostrar_tabla_reservas(listings)
 
 main()
