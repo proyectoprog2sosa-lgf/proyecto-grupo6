@@ -1,13 +1,13 @@
 from proyecto import *
 
-def manejar_archivo():
+def manejar_archivo2():
     """
     manejar_archivo() -> dict[int, tuple]
     Lee el archivo CSV y construye un diccionario donde la clave es el id del alojamiento
     y el valor es una tupla con toda la información del Airbnb.
     """
     dicc = {}
-    with open('jola.csv') as listings:
+    with open('dataset2.csv') as listings:
         lector = csv.reader(listings)
         next(lector)
         for linea in lector:
@@ -75,3 +75,34 @@ def test_buscar_alojamiento():
     resultado = buscar_alojamiento("Casa Azul", listings)
 
     assert resultado == [["Nombre", "Anfitrión", "Barrio", "Reseñas"],["Casa Azul","Juan","Palermo",5]]
+
+def test_alojamientos_minimo_noches():
+    listings = manejar_archivo2()
+    lista_resultado = [(-34.59381206465798,-58.414331541691794),
+                       (-34.59976681720103,-58.42649866037633),
+                       (-34.58604,-58.39537),
+                       (-34.62284436910694,-58.39210310422973),
+                       (-34.59026,-58.40117),
+                       (-34.6153174,-58.36287300000001),
+                       (-34.6110957,-58.40255639999999),
+                       (-34.582348,-58.4349066),
+                       (-34.58855417184091,-58.3916275575757),
+                       (-34.62114416204078,-58.402598587937945),
+                       (-34.55769,-58.46924)]
+    assert alojamientos_minimo_noches(1,listings) == lista_resultado
+    assert alojamientos_minimo_noches(0,listings) == []
+    
+def test_contar_aloj_barrio():
+    listings = manejar_archivo2()
+    dicc_resultado = {"Belgrano": 1,
+                      "Palermo": 6,
+                      "Almagro": 1,
+                      "Recoleta": 3,
+                      "San Cristobal": 2,
+                      "Puerto Madero": 1,
+                      "San Nicolas": 1,
+                      "Balvanera": 1,
+                      "Retiro": 1,
+                      "Barracas": 1,
+                      "Nuñez": 1}
+    assert contar_aloj_barrio(listings) == dicc_resultado
